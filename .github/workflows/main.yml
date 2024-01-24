@@ -24,3 +24,47 @@ jobs:
      #finally build your app with the latest command
       - name: Build and test with Maven
         run: mvn -B verify --file ./simple-api/pom.xml
+
+  # define job to build and publish docker image
+  build-and-push-docker-image:
+    needs: test-backend
+    # run only when code is compiling and tests are passing
+    runs-on: ubuntu-22.04
+    # steps to perform in job
+    steps:
+      - name: Login to DockerHub
+        # Login your docker hub by username and your docker hub token
+        run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
+        
+      - name: Checkout code
+        # Check your code
+        uses: actions/checkout@v2.5.0
+
+      - name: Build image and push backend
+        uses: docker/build-push-action@v3
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          # the docker file is in the root of the project
+          context: ./simple-api
+          # Note: tags has to be all lower-case
+          tags:  ${{secrets.DOCKERHUB_USERNAME}}/simple-api-studentm # The tag for the docker image 
+          # push to dockerhub only when code is pushed to main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build image and push database
+        uses: docker/build-push-action@v3
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: ./postgresql
+          tags:  ${{secrets.DOCKERHUB_USERNAME}}/postgresql # The tag for the docker image 
+          # push to dockerhub only when code is pushed to main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build image and push httpd
+        uses: docker/build-push-action@v3
+        with:
+          # relative path to the place where source code with Dockerfile is located
+          context: ./http_server # The path to dockerfile
+          tags:  ${{secrets.DOCKERHUB_USERNAME}}/httpd # The tag for the docker image 
+          # push to dockerhub only when code is pushed to main branch
+          push: ${{ github.ref == 'refs/heads/main' }}
