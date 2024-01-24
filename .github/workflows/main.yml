@@ -55,8 +55,8 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           # relative path to the place where source code with Dockerfile is located
-          context: ./postgresql
-          tags:  ${{secrets.DOCKERHUB_USERNAME}}/postgresql # The tag for the docker image 
+          context: ./database
+          tags:  ${{secrets.DOCKERHUB_USERNAME}}/database # The tag for the docker image 
           # push to dockerhub only when code is pushed to main branch
           push: ${{ github.ref == 'refs/heads/main' }}
 
