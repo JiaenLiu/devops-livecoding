@@ -64,7 +64,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           # relative path to the place where source code with Dockerfile is located
-          context: ./http_server # The path to dockerfile
+          context: ./http-server # The path to dockerfile
           tags:  ${{secrets.DOCKERHUB_USERNAME}}/httpd # The tag for the docker image 
           # push to dockerhub only when code is pushed to main branch
           push: ${{ github.ref == 'refs/heads/main' }}
