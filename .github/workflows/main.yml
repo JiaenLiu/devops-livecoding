@@ -24,6 +24,7 @@ jobs:
       back_end_path: './simple-api'
       database_path: './database'
       httpd_server_path: './http-server'
+      front_end_path: './devops-front'
     secrets:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}

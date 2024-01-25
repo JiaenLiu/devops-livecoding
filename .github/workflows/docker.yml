@@ -21,6 +21,11 @@ on:
         description: 'Path to the httpd server'
         default: './http-server'
         required: true
+      front_end_path:
+        type: string
+        description: 'path to the front end'
+        default: './devops-front'
+        required: true
     secrets:
       DOCKERHUB_TOKEN:
         description: 'Docker token'
@@ -65,4 +70,11 @@ jobs:
           # relative path to the place where source code with Dockerfile is located
           context: ${{ inputs.httpd_server_path }}
           tags:  ${{secrets.DOCKERHUB_USERNAME}}/httpd
+          push: ${{ github.ref == 'refs/heads/main' }}
+
+      - name: Build image and push my-front-end
+        uses: docker/build-push-action@v3
+        with: 
+          context: ${{ inputs.front_end_path }}
+          tags:  ${{secrets.DOCKERHUB_USERNAME}}/my-front-end
           push: ${{ github.ref == 'refs/heads/main' }}
