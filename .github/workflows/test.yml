@@ -2,7 +2,7 @@ name: CI devops 2024 test
 on:
   #to begin you want to launch this job in main and develop
   push:
-    branches: [ origin, dev, main ]
+    branches: [ dev ]
   pull_request:
 
 jobs:
