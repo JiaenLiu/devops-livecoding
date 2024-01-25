@@ -1,95 +1,9 @@
-# name: CI devops 2024
-# on:
-#   #to begin you want to launch this job in main and develop
-#   push:
-#     branches: [ main ]
-#   pull_request:
-
-# jobs:
-#   # define job to build and test backend
-#   test-backend: 
-#     name: Build and analyze
-#     runs-on: ubuntu-latest
-#     steps:
-
-#       - uses: actions/checkout@v3
-#         with:
-#           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
-#       - name: Set up JDK 17
-#         uses: actions/setup-java@v3
-#         with:
-#           java-version: 17
-#           distribution: 'zulu' # Alternative distribution options are available.
-#       - name: Cache SonarCloud packages
-#         uses: actions/cache@v3
-#         with:
-#           path: ~/.sonar/cache
-#           key: ${{ runner.os }}-sonar
-#           restore-keys: ${{ runner.os }}-sonar
-#       - name: Cache Maven packages
-#         uses: actions/cache@v3
-#         with:
-#           path: ~/.m2
-#           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-#           restore-keys: ${{ runner.os }}-m2
-#       - name: Build and analyze
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
-#           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-#         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=jiaenliu42_jiaen-liu-test --file ./simple-api/pom.xml
-
-#   # define job to build and publish docker image
-#   build-and-push-docker-image:
-#     needs: test-backend
-#     # run only when code is compiling and tests are passing
-#     runs-on: ubuntu-22.04
-#     # steps to perform in job
-#     steps:
-#       - name: Login to DockerHub
-#         # Login your docker hub by username and your docker hub token
-#         run: docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-        
-#       - name: Checkout code
-#         # Check your code
-#         uses: actions/checkout@v2.5.0
-
-#       - name: Build image and push backend
-#         uses: docker/build-push-action@v3
-#         with:
-#           # relative path to the place where source code with Dockerfile is located
-#           # the docker file is in the root of the project
-#           context: ./simple-api
-#           # Note: tags has to be all lower-case
-#           tags:  ${{secrets.DOCKERHUB_USERNAME}}/simple-api-studentm # The tag for the docker image 
-#           # push to dockerhub only when code is pushed to main branch
-#           push: ${{ github.ref == 'refs/heads/main' }}
-
-#       - name: Build image and push database
-#         uses: docker/build-push-action@v3
-#         with:
-#           # relative path to the place where source code with Dockerfile is located
-#           context: ./database
-#           tags:  ${{secrets.DOCKERHUB_USERNAME}}/database # The tag for the docker image 
-#           # push to dockerhub only when code is pushed to main branch
-#           push: ${{ github.ref == 'refs/heads/main' }}
-
-#       - name: Build image and push httpd
-#         uses: docker/build-push-action@v3
-#         with:
-#           # relative path to the place where source code with Dockerfile is located
-#           context: ./http-server # The path to dockerfile
-#           tags:  ${{secrets.DOCKERHUB_USERNAME}}/httpd # The tag for the docker image 
-#           # push to dockerhub only when code is pushed to main branch
-#           push: ${{ github.ref == 'refs/heads/main' }}
-
 name: CI devops 2024 all
 on:
   #to begin you want to launch this job in main and develop
-  workflow_run:
-    # workflows: ["CI devops 2024 test"] # name of the workflow you want to trigger this job
-    branches: [ origin, main ]
-    types:
-      - completed
+  push:
+    branches: [ dev ]
+  pull_request:
 
 jobs:
   back_end_tests:
