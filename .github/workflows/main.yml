@@ -86,7 +86,7 @@ name: CI devops 2024 all
 on:
   #to begin you want to launch this job in main and develop
   workflow_run:
-    workflows: ["CI devops 2024 test"] # name of the workflow you want to trigger this job
+    # workflows: ["CI devops 2024 test"] # name of the workflow you want to trigger this job
     branches: [ origin, main ]
     types:
       - completed
